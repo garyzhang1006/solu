@@ -1,0 +1,338 @@
+[
+  {
+    "smiles": "O",
+    "descriptors": {
+      "clogp": -0.8247,
+      "amw": 18.015,
+      "tpsa": 31.5,
+      "hbd": 0,
+      "hba": 0,
+      "rotb": 0,
+      "aromrings": 0,
+      "fcsp3": 0.0,
+      "rings": 0
+    },
+    "js_descriptors": {
+      "CrippenClogP": -0.8247,
+      "amw": 18.015,
+      "tpsa": 31.5,
+      "NumHBD": 0,
+      "NumHBA": 0,
+      "NumRotatableBonds": 0,
+      "NumAromaticRings": 0,
+      "FractionCSP3": 0.0,
+      "NumRings": 0
+    },
+    "onnx_logS": 1.0172455310821533,
+    "sklearn_logS": 1.017244354708264,
+    "linear_logS": 0.6042620150373628
+  },
+  {
+    "smiles": "CCO",
+    "descriptors": {
+      "clogp": -0.0014000000000000123,
+      "amw": 46.069,
+      "tpsa": 20.23,
+      "hbd": 1,
+      "hba": 1,
+      "rotb": 0,
+      "aromrings": 0,
+      "fcsp3": 1.0,
+      "rings": 0
+    },
+    "js_descriptors": {
+      "CrippenClogP": -0.0014000000000000123,
+      "amw": 46.069,
+      "tpsa": 20.23,
+      "NumHBD": 1,
+      "NumHBA": 1,
+      "NumRotatableBonds": 0,
+      "NumAromaticRings": 0,
+      "FractionCSP3": 1.0,
+      "NumRings": 0
+    },
+    "onnx_logS": 1.0308711528778076,
+    "sklearn_logS": 1.0308742498621681,
+    "linear_logS": -0.19437915981140286
+  },
+  {
+    "smiles": "OC[C@H]1O[C@@](CO)(O[C@H]2O[C@H](CO)[C@@H](O)[C@H](O)[C@H]2O)[C@@H](O)[C@@H]1O",
+    "descriptors": {
+      "clogp": -5.395599999999993,
+      "amw": 342.297,
+      "tpsa": 189.52999999999997,
+      "hbd": 8,
+      "hba": 11,
+      "rotb": 5,
+      "aromrings": 0,
+      "fcsp3": 1.0,
+      "rings": 2
+    },
+    "js_descriptors": {
+      "CrippenClogP": -5.395599999999993,
+      "amw": 342.297,
+      "tpsa": 189.52999999999997,
+      "NumHBD": 8,
+      "NumHBA": 11,
+      "NumRotatableBonds": 5,
+      "NumAromaticRings": 0,
+      "FractionCSP3": 1.0,
+      "NumRings": 2
+    },
+    "onnx_logS": 0.19510984420776367,
+    "sklearn_logS": 0.19511008660159318,
+    "linear_logS": 1.7709127728760405
+  },
+  {
+    "smiles": "O=C[C@@H](O)[C@@H](O)[C@H](O)[C@H](O)CO",
+    "descriptors": {
+      "clogp": -3.3788,
+      "amw": 180.156,
+      "tpsa": 118.22,
+      "hbd": 5,
+      "hba": 6,
+      "rotb": 5,
+      "aromrings": 0,
+      "fcsp3": 0.8333333333333334,
+      "rings": 0
+    },
+    "js_descriptors": {
+      "CrippenClogP": -3.3788,
+      "amw": 180.156,
+      "tpsa": 118.22,
+      "NumHBD": 5,
+      "NumHBA": 6,
+      "NumRotatableBonds": 5,
+      "NumAromaticRings": 0,
+      "FractionCSP3": 0.8333333333333334,
+      "NumRings": 0
+    },
+    "onnx_logS": 0.6345183849334717,
+    "sklearn_logS": 0.6345184623474696,
+    "linear_logS": 1.2370669244434458
+  },
+  {
+    "smiles": "Cn1c(=O)c2c(ncn2C)n(C)c1=O",
+    "descriptors": {
+      "clogp": -1.0293,
+      "amw": 194.194,
+      "tpsa": 61.82,
+      "hbd": 0,
+      "hba": 6,
+      "rotb": 0,
+      "aromrings": 2,
+      "fcsp3": 0.375,
+      "rings": 2
+    },
+    "js_descriptors": {
+      "CrippenClogP": -1.0293,
+      "amw": 194.194,
+      "tpsa": 61.82,
+      "NumHBD": 0,
+      "NumHBA": 6,
+      "NumRotatableBonds": 0,
+      "NumAromaticRings": 2,
+      "FractionCSP3": 0.375,
+      "NumRings": 2
+    },
+    "onnx_logS": -1.169996976852417,
+    "sklearn_logS": -1.169996089114662,
+    "linear_logS": -0.0894607634779998
+  },
+  {
+    "smiles": "CC(=O)Oc1ccccc1C(=O)O",
+    "descriptors": {
+      "clogp": 1.3101,
+      "amw": 180.15899999999996,
+      "tpsa": 63.60000000000001,
+      "hbd": 1,
+      "hba": 3,
+      "rotb": 2,
+      "aromrings": 1,
+      "fcsp3": 0.1111111111111111,
+      "rings": 1
+    },
+    "js_descriptors": {
+      "CrippenClogP": 1.3101,
+      "amw": 180.15899999999996,
+      "tpsa": 63.60000000000001,
+      "NumHBD": 1,
+      "NumHBA": 3,
+      "NumRotatableBonds": 2,
+      "NumAromaticRings": 1,
+      "FractionCSP3": 0.1111111111111111,
+      "NumRings": 1
+    },
+    "onnx_logS": -1.6958506107330322,
+    "sklearn_logS": -1.6958496516171926,
+    "linear_logS": -2.0887074783359676
+  },
+  {
+    "smiles": "CC(C)Cc1ccc(C(C)C(=O)O)cc1",
+    "descriptors": {
+      "clogp": 3.073200000000001,
+      "amw": 206.28499999999997,
+      "tpsa": 37.3,
+      "hbd": 1,
+      "hba": 1,
+      "rotb": 4,
+      "aromrings": 1,
+      "fcsp3": 0.46153846153846156,
+      "rings": 1
+    },
+    "js_descriptors": {
+      "CrippenClogP": 3.073200000000001,
+      "amw": 206.28499999999997,
+      "tpsa": 37.3,
+      "NumHBD": 1,
+      "NumHBA": 1,
+      "NumRotatableBonds": 4,
+      "NumAromaticRings": 1,
+      "FractionCSP3": 0.46153846153846156,
+      "NumRings": 1
+    },
+    "onnx_logS": -3.463263988494873,
+    "sklearn_logS": -3.463263720211762,
+    "linear_logS": -3.8995962850458383
+  },
+  {
+    "smiles": "CC(=O)Nc1ccc(O)cc1",
+    "descriptors": {
+      "clogp": 1.3505999999999998,
+      "amw": 151.165,
+      "tpsa": 49.33,
+      "hbd": 2,
+      "hba": 2,
+      "rotb": 1,
+      "aromrings": 1,
+      "fcsp3": 0.125,
+      "rings": 1
+    },
+    "js_descriptors": {
+      "CrippenClogP": 1.3505999999999998,
+      "amw": 151.165,
+      "tpsa": 49.33,
+      "NumHBD": 2,
+      "NumHBA": 2,
+      "NumRotatableBonds": 1,
+      "NumAromaticRings": 1,
+      "FractionCSP3": 0.125,
+      "NumRings": 1
+    },
+    "onnx_logS": -1.911165475845337,
+    "sklearn_logS": -1.9111643233406668,
+    "linear_logS": -2.0556909007725546
+  },
+  {
+    "smiles": "c1ccccc1",
+    "descriptors": {
+      "clogp": 1.6866,
+      "amw": 78.11399999999999,
+      "tpsa": 0.0,
+      "hbd": 0,
+      "hba": 0,
+      "rotb": 0,
+      "aromrings": 1,
+      "fcsp3": 0.0,
+      "rings": 1
+    },
+    "js_descriptors": {
+      "CrippenClogP": 1.6866,
+      "amw": 78.11399999999999,
+      "tpsa": 0.0,
+      "NumHBD": 0,
+      "NumHBA": 0,
+      "NumRotatableBonds": 0,
+      "NumAromaticRings": 1,
+      "FractionCSP3": 0.0,
+      "NumRings": 1
+    },
+    "onnx_logS": -1.5206416845321655,
+    "sklearn_logS": -1.5206412746293778,
+    "linear_logS": -1.614896532637945
+  },
+  {
+    "smiles": "c1ccc2ccccc2c1",
+    "descriptors": {
+      "clogp": 2.839800000000001,
+      "amw": 128.17399999999995,
+      "tpsa": 0.0,
+      "hbd": 0,
+      "hba": 0,
+      "rotb": 0,
+      "aromrings": 2,
+      "fcsp3": 0.0,
+      "rings": 2
+    },
+    "js_descriptors": {
+      "CrippenClogP": 2.839800000000001,
+      "amw": 128.17399999999995,
+      "tpsa": 0.0,
+      "NumHBD": 0,
+      "NumHBA": 0,
+      "NumRotatableBonds": 0,
+      "NumAromaticRings": 2,
+      "FractionCSP3": 0.0,
+      "NumRings": 2
+    },
+    "onnx_logS": -3.6003518104553223,
+    "sklearn_logS": -3.600351984335412,
+    "linear_logS": -3.1597283139457186
+  },
+  {
+    "smiles": "Clc1ccc(C(c2ccc(Cl)cc2)C(Cl)(Cl)Cl)cc1",
+    "descriptors": {
+      "clogp": 6.495500000000003,
+      "amw": 354.4910000000001,
+      "tpsa": 0.0,
+      "hbd": 0,
+      "hba": 0,
+      "rotb": 2,
+      "aromrings": 2,
+      "fcsp3": 0.14285714285714285,
+      "rings": 2
+    },
+    "js_descriptors": {
+      "CrippenClogP": 6.495500000000003,
+      "amw": 354.4910000000001,
+      "tpsa": 0.0,
+      "NumHBD": 0,
+      "NumHBA": 0,
+      "NumRotatableBonds": 2,
+      "NumAromaticRings": 2,
+      "FractionCSP3": 0.14285714285714285,
+      "NumRings": 2
+    },
+    "onnx_logS": -7.5023651123046875,
+    "sklearn_logS": -7.502363613007362,
+    "linear_logS": -7.124020098569963
+  },
+  {
+    "smiles": "CC(C)CCC[C@@H](C)[C@H]1CC[C@H]2[C@@H]3CC=C4C[C@H](O)CC[C@]4(C)[C@H]3CC[C@]12C",
+    "descriptors": {
+      "clogp": 7.388700000000009,
+      "amw": 386.6640000000002,
+      "tpsa": 20.23,
+      "hbd": 1,
+      "hba": 1,
+      "rotb": 5,
+      "aromrings": 0,
+      "fcsp3": 0.9259259259259259,
+      "rings": 4
+    },
+    "js_descriptors": {
+      "CrippenClogP": 7.388700000000009,
+      "amw": 386.6640000000002,
+      "tpsa": 20.23,
+      "NumHBD": 1,
+      "NumHBA": 1,
+      "NumRotatableBonds": 5,
+      "NumAromaticRings": 0,
+      "FractionCSP3": 0.9259259259259259,
+      "NumRings": 4
+    },
+    "onnx_logS": -6.923857688903809,
+    "sklearn_logS": -6.923859754763179,
+    "linear_logS": -8.037911280817628
+  }
+]

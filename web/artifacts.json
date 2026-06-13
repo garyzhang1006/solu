@@ -1,0 +1,277 @@
+{
+  "dataset": {
+    "name": "ESOL / Delaney (MoleculeNet)",
+    "n": 1128,
+    "target": "log10 aqueous solubility (mol/L)",
+    "citation": "Delaney, J.S. ESOL: Estimating Aqueous Solubility Directly from Molecular Structure. J. Chem. Inf. Comput. Sci. 2004."
+  },
+  "features": [
+    {
+      "key": "clogp",
+      "js_key": "CrippenClogP",
+      "label": "LogP (lipophilicity)",
+      "unit": "",
+      "note": "Higher = more 'oily' / less water-friendly. Pushes solubility DOWN."
+    },
+    {
+      "key": "amw",
+      "js_key": "amw",
+      "label": "Molecular weight",
+      "unit": "g/mol",
+      "note": "Bigger molecules are generally harder to dissolve."
+    },
+    {
+      "key": "tpsa",
+      "js_key": "tpsa",
+      "label": "Polar surface area",
+      "unit": "A^2",
+      "note": "More polar surface = more water contact. Pushes solubility UP."
+    },
+    {
+      "key": "hbd",
+      "js_key": "NumHBD",
+      "label": "H-bond donors",
+      "unit": "",
+      "note": "Groups that donate H-bonds to water (e.g. -OH, -NH). Raise solubility."
+    },
+    {
+      "key": "hba",
+      "js_key": "NumHBA",
+      "label": "H-bond acceptors",
+      "unit": "",
+      "note": "Atoms that accept H-bonds from water (e.g. O, N). Raise solubility."
+    },
+    {
+      "key": "rotb",
+      "js_key": "NumRotatableBonds",
+      "label": "Rotatable bonds",
+      "unit": "",
+      "note": "Flexibility; weakly linked to solubility."
+    },
+    {
+      "key": "aromrings",
+      "js_key": "NumAromaticRings",
+      "label": "Aromatic rings",
+      "unit": "",
+      "note": "Flat hydrophobic rings (like benzene). Tend to lower solubility."
+    },
+    {
+      "key": "fcsp3",
+      "js_key": "FractionCSP3",
+      "label": "Fraction sp3 C",
+      "unit": "",
+      "note": "Share of 3D (saturated) carbons; more 3D often dissolves better."
+    },
+    {
+      "key": "rings",
+      "js_key": "NumRings",
+      "label": "Ring count",
+      "unit": "",
+      "note": "Total rings in the structure."
+    }
+  ],
+  "feature_order": [
+    "clogp",
+    "amw",
+    "tpsa",
+    "hbd",
+    "hba",
+    "rotb",
+    "aromrings",
+    "fcsp3",
+    "rings"
+  ],
+  "js_keys": [
+    "CrippenClogP",
+    "amw",
+    "tpsa",
+    "NumHBD",
+    "NumHBA",
+    "NumRotatableBonds",
+    "NumAromaticRings",
+    "FractionCSP3",
+    "NumRings"
+  ],
+  "scaler": {
+    "mean": [
+      2.4475195390070916,
+      203.93707446808503,
+      34.87288120567374,
+      0.7012411347517731,
+      2.1117021276595747,
+      2.1773049645390072,
+      0.9308510638297872,
+      0.4443950171808945,
+      1.3909574468085106
+    ],
+    "scale": [
+      1.8520536197346744,
+      102.69252718142427,
+      35.36790496144466,
+      1.089243939755347,
+      2.1524201972659203,
+      2.6398035816230374,
+      1.004690410917543,
+      0.3748136669479889,
+      1.317701283276333
+    ]
+  },
+  "linear": {
+    "coef": [
+      -1.3684288583847923,
+      -0.5064940515227145,
+      -0.42514221870491314,
+      -0.0627348519926372,
+      0.5085154878692252,
+      -0.12496102383181412,
+      -0.3239324388285192,
+      -0.13721633180960366,
+      -0.1626603458343103
+    ],
+    "intercept": -3.050101950354608
+  },
+  "feature_stats": {
+    "clogp": {
+      "min": -7.571399999999989,
+      "max": 10.388599999999993,
+      "mean": 2.447519539007093,
+      "std": 1.852053619734674
+    },
+    "amw": {
+      "min": 16.043,
+      "max": 780.9490000000001,
+      "mean": 203.9370744680851,
+      "std": 102.69252718142437
+    },
+    "tpsa": {
+      "min": 0.0,
+      "max": 268.67999999999995,
+      "mean": 34.87288120567376,
+      "std": 35.36790496144455
+    },
+    "hbd": {
+      "min": 0.0,
+      "max": 11.0,
+      "mean": 0.7012411347517731,
+      "std": 1.0892439397553462
+    },
+    "hba": {
+      "min": 0.0,
+      "max": 16.0,
+      "mean": 2.1117021276595747,
+      "std": 2.152420197265931
+    },
+    "rotb": {
+      "min": 0.0,
+      "max": 23.0,
+      "mean": 2.1773049645390072,
+      "std": 2.6398035816230383
+    },
+    "aromrings": {
+      "min": 0.0,
+      "max": 7.0,
+      "mean": 0.9308510638297872,
+      "std": 1.0046904109175365
+    },
+    "fcsp3": {
+      "min": 0.0,
+      "max": 1.0,
+      "mean": 0.4443950171808939,
+      "std": 0.3748136669479904
+    },
+    "rings": {
+      "min": 0.0,
+      "max": 8.0,
+      "mean": 1.3909574468085106,
+      "std": 1.3177012832763317
+    }
+  },
+  "target_stats": {
+    "min": -11.6,
+    "max": 1.58,
+    "mean": -3.05010195035461,
+    "std": 2.0955117304559443
+  },
+  "metrics": {
+    "linear": {
+      "rmse": 1.0375057831293515,
+      "mae": 0.7809000611685292,
+      "r2": 0.772273534869578,
+      "cv_r2_mean": 0.7872036567911266,
+      "cv_r2_std": 0.014492735299797261
+    },
+    "random_forest": {
+      "rmse": 0.7989034809060322,
+      "mae": 0.5490042190214528,
+      "r2": 0.8649728567681276,
+      "cv_r2_mean": 0.8900573572238646,
+      "cv_r2_std": 0.016378163747946803
+    },
+    "gradient_boosting": {
+      "rmse": 0.7464183608838415,
+      "mae": 0.538273689378889,
+      "r2": 0.8821316835566027,
+      "cv_r2_mean": 0.8925512736171102,
+      "cv_r2_std": 0.008111160904697393
+    }
+  },
+  "best_model": "gradient_boosting",
+  "examples": [
+    {
+      "name": "Water",
+      "smiles": "O"
+    },
+    {
+      "name": "Ethanol",
+      "smiles": "CCO"
+    },
+    {
+      "name": "Table sugar (sucrose)",
+      "smiles": "OC[C@H]1O[C@@](CO)(O[C@H]2O[C@H](CO)[C@@H](O)[C@H](O)[C@H]2O)[C@@H](O)[C@@H]1O"
+    },
+    {
+      "name": "Glucose",
+      "smiles": "O=C[C@@H](O)[C@@H](O)[C@H](O)[C@H](O)CO"
+    },
+    {
+      "name": "Caffeine",
+      "smiles": "Cn1c(=O)c2c(ncn2C)n(C)c1=O"
+    },
+    {
+      "name": "Aspirin",
+      "smiles": "CC(=O)Oc1ccccc1C(=O)O"
+    },
+    {
+      "name": "Ibuprofen",
+      "smiles": "CC(C)Cc1ccc(C(C)C(=O)O)cc1"
+    },
+    {
+      "name": "Paracetamol",
+      "smiles": "CC(=O)Nc1ccc(O)cc1"
+    },
+    {
+      "name": "Benzene",
+      "smiles": "c1ccccc1"
+    },
+    {
+      "name": "Naphthalene",
+      "smiles": "c1ccc2ccccc2c1"
+    },
+    {
+      "name": "DDT",
+      "smiles": "Clc1ccc(C(c2ccc(Cl)cc2)C(Cl)(Cl)Cl)cc1"
+    },
+    {
+      "name": "Cholesterol",
+      "smiles": "CC(C)CCC[C@@H](C)[C@H]1CC[C@H]2[C@@H]3CC=C4C[C@H](O)CC[C@]4(C)[C@H]3CC[C@]12C"
+    },
+    {
+      "name": "Acetic acid",
+      "smiles": "CC(=O)O"
+    },
+    {
+      "name": "Vitamin C",
+      "smiles": "O=C1O[C@H]([C@@H](O)CO)C(O)=C1O"
+    }
+  ]
+}

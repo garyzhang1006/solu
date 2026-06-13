@@ -1,0 +1,9 @@
+# Pinned to reproduce training AND the RDKit-JS parity gate.
+# rdkit MUST match the RDKit-JS build (2025.03.4) or browser descriptors diverge.
+rdkit==2025.3.4
+numpy==2.4.6
+pandas==3.0.3
+scikit-learn==1.9.0
+onnx==1.21.0
+skl2onnx==1.20.0
+onnxruntime==1.26.0

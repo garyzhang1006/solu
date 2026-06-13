@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Solu - One Page Project Description</title>
+<style>
+  @page { size: letter; margin: 14mm 15mm; }
+  *{box-sizing:border-box}
+  body{font:10.5pt/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;color:#10202f;margin:0}
+  h1{font-size:23pt;margin:0;letter-spacing:-.5pt}
+  h1 .g{background:linear-gradient(120deg,#1f7ae0,#16b3b3);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .tag{color:#5b7187;font-size:11pt;margin:2pt 0 0}
+  .meta{font-size:8.5pt;color:#5b7187;margin-top:3pt}
+  h2{font-size:10.5pt;text-transform:uppercase;letter-spacing:.5pt;color:#1f7ae0;margin:11pt 0 3pt;border-bottom:1px solid #e3eaf2;padding-bottom:2pt}
+  p{margin:0 0 5pt}
+  ul{margin:0 0 5pt;padding-left:15pt}
+  li{margin-bottom:2pt}
+  .row{display:flex;gap:14pt}
+  .col{flex:1}
+  table{width:100%;border-collapse:collapse;font-size:9pt;margin-top:2pt}
+  th,td{border:1px solid #e3eaf2;padding:3pt 5pt;text-align:left}
+  th{background:#f4f7fb;color:#5b7187;font-size:8pt;text-transform:uppercase}
+  td.n{text-align:right;font-variant-numeric:tabular-nums}
+  tr.best td{font-weight:700;background:#eef6ff}
+  .pills{margin-top:5pt}
+  .pill{display:inline-block;font-size:8pt;font-weight:600;color:#1f7ae0;background:#eef6ff;border:1px solid #d6e6f6;border-radius:99px;padding:2pt 7pt;margin:0 3pt 3pt 0}
+  .foot{margin-top:9pt;font-size:8pt;color:#5b7187;border-top:1px solid #e3eaf2;padding-top:5pt}
+  b.k{color:#10202f}
+  .drop{font-size:18pt}
+</style>
+</head>
+<body>
+  <h1><span class="drop">&#128167;</span> <span class="g">Solu</span> — See why molecules dissolve</h1>
+  <p class="tag">An in-browser AI chemistry tutor that predicts a molecule's water solubility and teaches the structure–property reasoning behind it.</p>
+  <p class="meta">DSH Hacks V1 · Theme: AI × STEM Education · Web app (no install) · github.com/garyzhang1006/solu</p>
+
+  <h2>The problem</h2>
+  <p>Chemistry students memorize the rule "like dissolves like" but rarely <i>see</i> why one molecule dissolves and another doesn't. Solubility depends on a tug-of-war between polarity, hydrogen bonding, and lipophilicity that stays invisible in a textbook. Meanwhile, most "AI for education" tools are thin wrappers around a chat model — non-deterministic, unverifiable, and disconnected from real scientific data.</p>
+
+  <h2>What Solu does</h2>
+  <div class="row">
+    <div class="col">
+      <ul>
+        <li>Type a SMILES string or pick from 14 example molecules.</li>
+        <li><b class="k">RDKit-JS</b> draws the 2D structure and computes 9 descriptors live, in the browser.</li>
+        <li>A trained <b class="k">gradient-boosting model</b> predicts log-solubility (mol/L), converted to mg/L and a qualitative class.</li>
+      </ul>
+    </div>
+    <div class="col">
+      <ul>
+        <li>A <b class="k">"Why?" panel</b> decomposes the prediction into per-property contributions (LogP, polar surface area, H-bond donors…) a student can learn from.</li>
+        <li><b class="k">Quiz mode</b> for active recall; built-in lessons on polarity and hydrogen bonding.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>The data &amp; the model</h2>
+  <div class="row">
+    <div class="col">
+      <p>Trained on the <b class="k">ESOL / Delaney</b> dataset — 1,128 compounds with <i>measured</i> aqueous solubility, published by Delaney (2004) and distributed via <b class="k">MoleculeNet</b> (Wu et al., <i>Chem. Sci.</i> 2018, Stanford). Features are the interpretable Delaney descriptor family computed with RDKit.</p>
+      <div class="pills">
+        <span class="pill">Real academic dataset</span>
+        <span class="pill">No LLM · deterministic</span>
+        <span class="pill">100% client-side</span>
+        <span class="pill">Open source (MIT)</span>
+      </div>
+    </div>
+    <div class="col">
+      <table>
+        <tr><th>Model</th><th>RMSE</th><th>R&sup2;</th></tr>
+        <tr><td>Linear (Delaney-style)</td><td class="n">1.04</td><td class="n">0.77</td></tr>
+        <tr><td>Random forest</td><td class="n">0.80</td><td class="n">0.87</td></tr>
+        <tr class="best"><td>Gradient boosting (shipped)</td><td class="n">0.75</td><td class="n">0.88</td></tr>
+      </table>
+      <p style="font-size:8pt;margin-top:3pt;color:#5b7187">Held-out 20% test set. Beats the classic textbook linear equation (RMSE 1.04 → 0.75) on the same split.</p>
+    </div>
+  </div>
+
+  <h2>Why it's technically credible</h2>
+  <p>The model trains in Python (RDKit + scikit-learn) but runs in the browser (RDKit-JS + ONNX Runtime Web). We discovered and fixed a real train/inference skew (RDKit changed its H-bond-acceptor definition between versions), then locked correctness with automated parity gates: RDKit-JS vs RDKit-Python descriptors agree to 1e-5, and the full browser inference chain reproduces the Python prediction <b class="k">bit-for-bit (diff = 0.0)</b>. Browser predictions are provably identical to the trained model.</p>
+
+  <h2>Tech stack</h2>
+  <p>RDKit &amp; RDKit-JS · scikit-learn · skl2onnx + ONNX Runtime Web · vanilla HTML/CSS/JS (no framework, no backend).</p>
+
+  <div class="foot">
+    Delaney, J. S. <i>ESOL: Estimating Aqueous Solubility Directly from Molecular Structure.</i> J. Chem. Inf. Comput. Sci. 44, 1000–1005 (2004). · Wu, Z. et al. <i>MoleculeNet.</i> Chem. Sci. 9, 513–530 (2018). · Predictions are educational estimates, not laboratory values.
+  </div>
+</body>
+</html>

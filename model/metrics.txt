@@ -1,0 +1,8 @@
+Solu - solubility model metrics (held-out 20% test)
+
+linear             RMSE=1.038  MAE=0.781  R2=0.772  CV-R2=0.787+/-0.014
+random_forest      RMSE=0.799  MAE=0.549  R2=0.865  CV-R2=0.890+/-0.016
+gradient_boosting  RMSE=0.746  MAE=0.538  R2=0.882  CV-R2=0.893+/-0.008
+
+shipped model: gradient_boosting
+dataset: ESOL/Delaney, n=1128
