@@ -8,14 +8,6 @@ Built for **DSH Hacks V1** (theme: *AI × STEM Education*).
 
 ---
 
-## Why this is different
-
-Most "AI + education" projects are a thin wrapper around a chat model. Solu is the opposite: a **real, reproducible machine-learning pipeline** on a **dataset published by chemistry researchers**, deployed so that the *same trained model* runs in the student's browser.
-
-- **Niche, real STEM:** aqueous solubility prediction is a genuine cheminformatics task (drug formulation, environmental chemistry), rarely seen at student hackathons.
-- **Strong academic dataset:** the **ESOL / Delaney** set — 1,128 compounds with *measured* aqueous solubility, from Delaney (2004) and distributed via **MoleculeNet** (Wu et al., *Chem. Sci.* 2018, Stanford Pande Lab).
-- **No LLM in the loop:** predictions are deterministic and verifiable. Same molecule → same number, every time.
-- **It teaches, not just predicts:** every prediction is decomposed into per-property contributions a chemistry student can learn from.
 
 ## What it does
 
