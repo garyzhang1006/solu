@@ -1,13 +1,12 @@
 # Solu — *See why molecules dissolve* 💧
 
-An AI chemistry tutor that predicts a molecule's **water solubility** from its structure and **teaches the structure–property reasoning behind the answer** — running 100% in your browser, with no server, no API, and no LLM.
+An AI chemistry tutor that predicts a molecule's **water solubility** from its structure and **teaches the structure–property reasoning behind the answer**. The **prediction** runs 100% in your browser — no server, no API, no LLM. An **optional AI tutor** (Claude Sonnet 4.6, behind a tiny local proxy) then explains the chemistry in plain English, grounded in real measured molecules from the datasets.
 
 Built for **DSH Hacks V1** (theme: *AI × STEM Education*).
 
 > Type or pick any molecule → RDKit-JS draws it and computes its descriptors → a gradient-boosting model (trained on a published chemistry dataset, exported to ONNX) predicts log-solubility client-side → an interpretable linear model explains *which properties* pushed the answer up or down.
 
 ---
-
 
 ## What it does
 
@@ -19,6 +18,7 @@ Built for **DSH Hacks V1** (theme: *AI × STEM Education*).
 | **Molecular fingerprint** | The 9 computed descriptors with where each sits across the dataset. |
 | **Quiz mode** | Guess soluble / insoluble before the model reveals — active learning. |
 | **Lessons** | Plain-English explanations of polarity, hydrogen bonding, and lipophilicity. |
+| **AI tutor** *(optional)* | Ask **Claude Sonnet 4.6** *why* this molecule has its predicted solubility. The browser finds the structurally nearest **real measured** molecules (from ESOL + AqSolDB) and hands them to the model as evidence — so it explains with data, not guesses. Needs the local proxy + an Anthropic API key (below). |
 
 ## Model & results
 
@@ -53,7 +53,20 @@ python3 -m http.server 8910
 # open http://localhost:8910
 ```
 
-**Single-file build** — `dist/solu.html` has the model + data embedded; serve it anywhere (or open locally) and it runs with only the RDKit/ONNX CDN scripts.
+**Single-file build** — `dist/solu.html` has the model + data embedded; serve it anywhere (or open locally) and it runs with only the RDKit/ONNX CDN scripts. (Prediction only — the AI tutor needs the proxy below.)
+
+**With the AI tutor (optional):** the tutor needs a tiny Python proxy so your Anthropic API key never touches the browser. The in-browser predictor is unchanged; this just adds the "Ask the AI tutor" card.
+
+```bash
+pip install -r requirements.txt              # adds the `anthropic` SDK
+python tutor/build_grounding.py              # once: writes web/grounding.json (real molecules the tutor cites)
+export ANTHROPIC_API_KEY=sk-ant-...          # your key, server-side only
+python tutor/server.py                       # serves web/ + /api/tutor  →  http://localhost:8000
+```
+
+The tutor is fixed to **`claude-sonnet-4-6`** and streams its answer. Without a key (or proxy) the rest of the app works exactly as before; the tutor card shows a friendly "start the server" hint.
+
+**Train the tutor on more datasets** — its grounding corpus is built from the logS datasets in `datasets/`. Add more keys to `SOLUBILITY_KEYS` in `tutor/build_grounding.py` and re-run it; the tutor then cites a larger, richer set of real measurements.
 
 ## Reproduce the model
 
@@ -77,13 +90,18 @@ solu/
 │   ├── index.html          # the app (RDKit-JS + ONNX Runtime Web)
 │   ├── model.onnx          # trained gradient-boosting model
 │   ├── artifacts.json      # feature spec, scaler, linear surrogate, metrics, examples
+│   ├── grounding.json      # real measured molecules the AI tutor cites (built from datasets/)
 │   └── parity_fixture.json # per-molecule descriptors + predictions for the gates
-├── dist/solu.html          # single-file portable build
+├── dist/solu.html          # single-file portable build (prediction only)
 ├── model/
 │   ├── train.py            # data → descriptors → train → export
 │   ├── parity_test.cjs     # RDKit-JS vs RDKit-Python
 │   ├── e2e_test.cjs        # RDKit-JS + ONNX Runtime Web vs Python
 │   └── build_standalone.py # bundler
+├── tutor/                  # optional AI tutor (Claude Sonnet 4.6)
+│   ├── server.py           # local proxy: serves web/ + streams /api/tutor
+│   └── build_grounding.py  # builds web/grounding.json from the logS datasets
+├── datasets/               # ESOL, AqSolDB, FreeSolv, Lipophilicity + loader
 ├── data/delaney-processed.csv
 ├── docs/                   # one-page description + demo script
 ├── requirements.txt
@@ -92,7 +110,7 @@ solu/
 
 ## Tech
 
-RDKit & RDKit-JS (cheminformatics), scikit-learn (gradient boosting), skl2onnx + ONNX Runtime Web (portable inference), vanilla HTML/CSS/JS (no framework).
+RDKit & RDKit-JS (cheminformatics), scikit-learn (gradient boosting), skl2onnx + ONNX Runtime Web (portable inference), vanilla HTML/CSS/JS (no framework). Optional tutor: Anthropic Python SDK + stdlib `http.server` proxy streaming `claude-sonnet-4-6`.
 
 ## Credits & citation
 

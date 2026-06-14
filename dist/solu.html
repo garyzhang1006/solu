@@ -136,6 +136,21 @@
   .hidden{display:none!important}
   .skip{position:absolute;left:-999px}.skip:focus{left:10px;top:10px;background:#fff;padding:8px 12px;border-radius:8px;z-index:99}
   @media(max-width:560px){.nav .btnlink{display:none}.nav .pill{font-size:11px}.bar{grid-template-columns:96px 1fr 52px}}
+
+  /* AI tutor */
+  .tutorpill{font-size:11px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:999px;padding:3px 9px;margin-left:8px;vertical-align:middle;letter-spacing:.02em}
+  .tutorout{margin-top:14px;min-height:20px;font-size:15px;line-height:1.6;white-space:pre-wrap;color:var(--ink)}
+  .tutorout:empty{display:none}
+  .tutorout .cursor{display:inline-block;width:8px;height:16px;background:var(--accent);vertical-align:text-bottom;animation:blink 1s steps(2) infinite;border-radius:1px}
+  @keyframes blink{0%,50%{opacity:1}50.01%,100%{opacity:0}}
+  .tutorcites{margin-top:12px;display:flex;flex-wrap:wrap;gap:6px}
+  .tutorcite{font-size:11.5px;font-family:ui-monospace,monospace;color:var(--muted);background:#f2f6fa;border:1px solid var(--line);border-radius:8px;padding:4px 8px}
+  .tutorcite b{color:var(--accent2)}
+  .tutornote{margin-top:10px;font-size:13px;color:var(--muted)}
+  .tutornote code{background:#eef4fb;border-radius:6px;padding:2px 6px;font-size:12.5px;color:var(--ink)}
+  .tutornote.err{color:var(--bad)}
+  .btn:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
+
 </style>
 </head>
 <body>
@@ -166,7 +181,7 @@
     <div class="badges">
       <span class="pill">&#129514; Trained on <b>1,128</b> lab measurements</span>
       <span class="pill">&#127919; Test R&sup2; <b id="heroR2">0.88</b></span>
-      <span class="pill">&#9889; No LLM &middot; real cheminformatics</span>
+      <span class="pill">&#9889; ML in-browser &middot; <b>optional AI tutor</b></span>
     </div>
     <h1>See <span class="grad">why molecules dissolve.</span></h1>
     <p class="sub">Type or pick any molecule. A gradient-boosting model trained on a published chemistry dataset predicts its water solubility in real time, draws the structure, and shows you the structure-property reasons a chemist would give.</p>
@@ -215,6 +230,20 @@
     </div>
   </div></div>
 
+  <!-- AI TUTOR -->
+  <div class="card" id="tutorCard" style="margin-top:20px"><div class="pad">
+    <h3>5 &middot; Ask the AI tutor <span class="tutorpill">Claude Sonnet 4.6</span></h3>
+    <p style="margin:.2em 0 0;font-size:14px;color:var(--muted)">It explains the chemistry behind the prediction, grounded in <b id="tutorN">real</b> measured molecules from the datasets &mdash; it never invents the number. Ask anything, or just hit Explain.</p>
+    <div class="inputrow" style="margin-top:12px">
+      <input type="text" id="tutorQ" placeholder="e.g. Why does the LogP matter so much here?" autocomplete="off" aria-label="Ask the tutor" />
+      <button class="btn" id="tutorAsk">Ask</button>
+    </div>
+    <button class="btn ghost" id="tutorExplain" style="margin-top:8px;width:100%">&#129504; Explain this prediction</button>
+    <div class="tutorout" id="tutorOut" aria-live="polite"></div>
+    <div class="tutorcites" id="tutorCites"></div>
+    <div class="tutornote" id="tutorNote"></div>
+  </div></div>
+
   <div class="grid" style="margin-top:20px">
     <!-- DESCRIPTORS -->
     <div class="card"><div class="pad">
@@ -251,7 +280,7 @@
   <!-- HOW -->
   <section class="block" id="how">
     <h2>How it works</h2>
-    <p class="lead">A real machine-learning pipeline &mdash; trained offline on published data, shipped to your browser. No server, no LLM, no API calls.</p>
+    <p class="lead">A real machine-learning pipeline &mdash; trained offline on published data, shipped to your browser. The <b>prediction</b> needs no server, no LLM, no API calls. An <b>optional AI tutor</b> (Claude Sonnet 4.6, via a local proxy) adds the plain-English &ldquo;why&rdquo; on top.</p>
     <div class="how">
       <div class="step"><div class="n">STEP 1</div><h4>Read structure</h4><p>RDKit-JS (WASM) parses your SMILES and computes 9 interpretable molecular descriptors.</p></div>
       <div class="step"><div class="n">STEP 2</div><h4>Run the model</h4><p>A gradient-boosting regressor (exported to ONNX) runs via ONNX Runtime Web, fully client-side.</p></div>
@@ -584,6 +613,7 @@ const App = {
 
       this.fillStatic();
       this.bind();
+      Tutor.init(this);
       document.getElementById("loading").style.opacity="0";
       setTimeout(()=>document.getElementById("loading").classList.add("hidden"),420);
 
@@ -661,6 +691,7 @@ const App = {
     this.renderContributions(x);
     this.renderTable(x);
     this.resetQuiz();
+    Tutor.onPredict(this.current);
   },
 
   nameFor(canon){
@@ -760,8 +791,172 @@ const App = {
   }
 };
 
+// AI tutor: streams a grounded Claude Sonnet 4.6 explanation from tutor/server.py.
+// Picks the structurally nearest REAL measured molecules (grounding.json) as the
+// model's evidence, in the model's own scaler-standardized feature space.
+// All model/dataset text reaches the DOM via textContent only (no innerHTML) -> XSS-safe.
+const Tutor = {
+  app:null, grounding:null, scale:null, idx:null, busy:false, cur:null,
+
+  async init(app){
+    this.app = app;
+    const a = app.art;
+    this.scale = a.feature_order.map((k,i)=> a.scaler.scale[i]);   // per-feature std
+    const q   = document.getElementById("tutorQ");
+    document.getElementById("tutorAsk").onclick     = ()=> this.ask(q.value.trim());
+    document.getElementById("tutorExplain").onclick = ()=> this.ask("");
+    q.addEventListener("keydown", e=>{ if(e.key==="Enter") this.ask(q.value.trim()); });
+    this.setEnabled(false);
+    try{
+      const g = await (await fetch("./grounding.json")).json();
+      this.grounding = g.molecules || [];
+      const gOrder = g.feature_order || a.feature_order;
+      this.idx = a.feature_order.map(k=> gOrder.indexOf(k));        // align corpus -> app order
+      document.getElementById("tutorN").textContent = (g.n||this.grounding.length).toLocaleString();
+    }catch(e){
+      this.grounding = [];
+      document.getElementById("tutorN").textContent = "the";
+    }
+  },
+
+  setEnabled(on){
+    document.getElementById("tutorAsk").disabled     = !on;
+    document.getElementById("tutorExplain").disabled = !on;
+  },
+
+  onPredict(cur){
+    this.cur = cur;
+    this.setEnabled(true);
+    document.getElementById("tutorOut").textContent = "";
+    document.getElementById("tutorCites").replaceChildren();
+    const note = document.getElementById("tutorNote");
+    note.textContent = ""; note.className = "tutornote";
+  },
+
+  // k nearest real molecules by standardized-descriptor (Euclidean) distance.
+  neighbors(x, k){
+    if(!this.grounding || !this.grounding.length) return [];
+    const scored = [];
+    for(const g of this.grounding){
+      if(g.smiles === this.cur.smiles) continue;   // never cite the molecule itself
+      let d = 0;
+      for(let i=0;i<x.length;i++){
+        const diff = (x[i]-g.x[this.idx[i]])/(this.scale[i]||1);
+        d += diff*diff;
+      }
+      scored.push([d,g]);
+    }
+    scored.sort((a,b)=>a[0]-b[0]);
+    return scored.slice(0,k).map(s=>({smiles:s[1].smiles, logS:s[1].logS, source:s[1].source}));
+  },
+
+  descriptors(){
+    const a = this.app.art, x = this.cur.x;
+    return a.feature_order.map((k,i)=>{
+      const f = a.feat[i], st = a.feature_stats[k];
+      const pct = Math.max(1,Math.min(99, Math.round((x[i]-st.min)/((st.max-st.min)||1)*100)));
+      return { label:f.label, value:(Number.isInteger(x[i])?x[i]:+x[i].toFixed(2)),
+               unit:f.unit?(" "+f.unit):"", percentile:pct };
+    });
+  },
+
+  renderCites(neighbors){
+    const wrap = document.getElementById("tutorCites");
+    wrap.replaceChildren();
+    if(!neighbors.length) return;
+    const lab = document.createElement("span");
+    lab.className = "tutorcite"; lab.style.border="none"; lab.style.background="none";
+    lab.textContent = "Cited measurements:";
+    wrap.appendChild(lab);
+    neighbors.forEach(n=>{
+      const el = document.createElement("span");
+      el.className = "tutorcite";
+      el.textContent = "logS "+n.logS+" · "+n.source;
+      el.title = n.smiles;
+      wrap.appendChild(el);
+    });
+  },
+
+  // Build the note from text + <code> segments without innerHTML.
+  note(segs, cls){
+    const note = document.getElementById("tutorNote");
+    note.className = "tutornote"+(cls?(" "+cls):"");
+    note.replaceChildren();
+    segs.forEach(s=>{
+      if(typeof s === "string"){ note.appendChild(document.createTextNode(s)); }
+      else { const c = document.createElement("code"); c.textContent = s.code; note.appendChild(c); }
+    });
+  },
+
+  async ask(question){
+    if(this.busy || !this.cur) return;
+    this.busy = true; this.setEnabled(false);
+    const out  = document.getElementById("tutorOut");
+    this.note([]);                                  // clear note
+
+    const neighbors = this.neighbors(this.cur.x, 6);
+    this.renderCites(neighbors);
+
+    // streamed text node + blinking cursor (no innerHTML)
+    out.replaceChildren();
+    const textEl = document.createElement("span");
+    const cursor = document.createElement("span"); cursor.className = "cursor";
+    out.appendChild(textEl); out.appendChild(cursor);
+
+    const mw = this.cur.x[this.app.art.feature_order.indexOf("amw")];
+    const payload = {
+      smiles: this.cur.smiles,
+      name:   this.cur.name==="custom" ? null : this.cur.name,
+      logS:   +this.cur.logS.toFixed(2),
+      klass:  this.app.classify(this.cur.logS).t,
+      mgl:    this.app.fmtSolubility(this.cur.logS, mw),
+      descriptors: this.descriptors(),
+      neighbors: neighbors,
+      question: question || ""
+    };
+
+    let acc = "";
+    try{
+      const res = await fetch("/api/tutor", {
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify(payload)
+      });
+      if(!res.ok || !res.body) throw new Error("no stream");
+      const reader = res.body.getReader(), dec = new TextDecoder();
+      let buf = "";
+      for(;;){
+        const {value, done} = await reader.read();
+        if(done) break;
+        buf += dec.decode(value, {stream:true});
+        let nl;
+        while((nl = buf.indexOf("\n\n")) >= 0){
+          const line = buf.slice(0, nl); buf = buf.slice(nl+2);
+          if(!line.startsWith("data:")) continue;
+          const ev = JSON.parse(line.slice(5).trim());
+          if(ev.error) throw new Error(ev.error);
+          if(ev.text){ acc += ev.text; textEl.textContent = acc; }
+        }
+      }
+      cursor.remove();
+      if(!acc.trim()) this.note(["The tutor returned an empty response."], "err");
+    }catch(e){
+      cursor.remove();
+      const msg = (e&&e.message)||String(e);
+      if(msg.includes("Failed to fetch")||msg.includes("NetworkError")||msg==="no stream")
+        this.note(["Tutor server not reachable. Run ", {code:"export ANTHROPIC_API_KEY=sk-ant-..."},
+                   " then ", {code:"python tutor/server.py"}, " and open ",
+                   {code:"http://localhost:8000"}, "."], "err");
+      else
+        this.note(["Tutor error: "+msg], "err");
+    }finally{
+      this.busy = false; this.setEnabled(true);
+    }
+  }
+};
+
 function setLoad(m){const el=document.getElementById("loadmsg"); if(el)el.textContent=m;}
 window.addEventListener("load", ()=>App.init());
+
 </script>
 </body>
 </html>

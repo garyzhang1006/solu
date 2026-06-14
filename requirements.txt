@@ -7,3 +7,6 @@ scikit-learn==1.9.0
 onnx==1.21.0
 skl2onnx==1.20.0
 onnxruntime==1.26.0
+
+# AI tutor backend (tutor/server.py). Streams claude-sonnet-4-6 explanations.
+anthropic>=0.40

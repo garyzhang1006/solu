@@ -1,0 +1,19 @@
+# GitHub Linguist: keep the language bar reflecting hand-written source, not
+# generated bundles, model/data artifacts, vendored datasets, or docs.
+
+# Generated build artifact (produced by model/build_standalone.py)
+dist/solu.html        linguist-generated=true
+
+# Generated model + data artifacts (produced by model/train.py and tutor/build_grounding.py)
+web/model.onnx        linguist-generated=true
+web/artifacts.json    linguist-generated=true
+web/parity_fixture.json linguist-generated=true
+web/grounding.json    linguist-generated=true
+model/metrics.txt     linguist-generated=true
+
+# Vendored public datasets (not our code)
+datasets/*.csv        linguist-vendored=true
+data/*.csv            linguist-vendored=true
+
+# Docs
+docs/*                linguist-documentation=true
